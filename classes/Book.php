@@ -42,7 +42,7 @@ class Book extends product
      */
     public function setSpecial($special): self
     {
-        if($this->checkSpecial($special)) {
+        if ($this->checkSpecial($special)) {
             $this->special = $special;
             return $this;
         } else {

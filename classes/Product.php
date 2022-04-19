@@ -15,7 +15,7 @@ abstract class Product
     public function addProductToDb()
     {
         // Check if all properties are set
-        if(
+        if (
             $this->sku != null
             && $this->name != null
             && $this->price != null
@@ -38,7 +38,7 @@ abstract class Product
         // Get all existing SKUs
         $db = new Database();
         $skuArr = $db->getAllSku();
-        if(in_array($sku, $skuArr)) {
+        if (in_array($sku, $skuArr)) {
             return false;
         } else {
             return true;
@@ -58,7 +58,7 @@ abstract class Product
      */
     public function checkPrice($price): bool
     {
-        if($price < 0) {
+        if ($price < 0) {
             return false;
         } else {
             return true;
@@ -73,7 +73,7 @@ abstract class Product
         // Get all valid product type IDs
         $db = new Database();
         $idArr = $db->getAllProductTypeIds();
-        if(in_array($typeId, $idArr)) {
+        if (in_array($typeId, $idArr)) {
             return true;
         } else {
             return false;
@@ -85,9 +85,9 @@ abstract class Product
      */
     public function checkSpecial($special): bool
     {
-        foreach($special as $s) {
-            if(is_numeric($s)) {
-                if($s <= 0) {
+        foreach ($special as $s) {
+            if (is_numeric($s)) {
+                if ($s <= 0) {
                     return false;
                 } 
             } else {
@@ -109,7 +109,7 @@ abstract class Product
      */
     public function setSku($sku): self
     {
-        if($this->checkSku($sku)) {
+        if ($this->checkSku($sku)) {
             $this->sku = $sku;
             return $this;
         } else {
@@ -131,7 +131,7 @@ abstract class Product
      */
     public function setName($name): self
     {
-        if($this->checkName($name)) {
+        if ($this->checkName($name)) {
             $this->name = $name;
             return $this;
         } else {
@@ -152,7 +152,7 @@ abstract class Product
      */
     public function setPrice($price): self
     {
-        if($this->checkPrice($price)) {
+        if ($this->checkPrice($price)) {
             $this->price = $price;
             return $this;
         } else {
@@ -173,7 +173,7 @@ abstract class Product
      */
     public function setTypeId($typeId): self
     {
-        if($this->checkTypeId($typeId)) {
+        if ($this->checkTypeId($typeId)) {
             $this->typeId = $typeId;
             return $this;
         } else {

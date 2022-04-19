@@ -26,7 +26,7 @@ class Database extends PDO
         $stmt->execute();
         $allSku = $stmt->fetchAll();
         $skuArr = [];
-        foreach($allSku as $skuBlock) {
+        foreach ($allSku as $skuBlock) {
             array_push($skuArr, $skuBlock[0]);
         }
 
@@ -40,7 +40,7 @@ class Database extends PDO
         $stmt->execute();
         $allId = $stmt->fetchAll();
         $idArr = [];
-        foreach($allId as $idBlock) {
+        foreach ($allId as $idBlock) {
             array_push($idArr, $idBlock[0]);
         }
 
@@ -92,7 +92,7 @@ class Database extends PDO
         $stmt->execute();
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;
@@ -108,7 +108,7 @@ class Database extends PDO
         $stmt->execute();
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;
@@ -124,7 +124,7 @@ class Database extends PDO
         $stmt->execute();
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;
@@ -143,7 +143,7 @@ class Database extends PDO
         $stmt->execute(['curType' => $curType]);
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;
@@ -162,7 +162,7 @@ class Database extends PDO
         $stmt->execute(['curType' => $curType]);
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;
@@ -181,7 +181,7 @@ class Database extends PDO
         $stmt->execute(['curType' => $curType]);
         $raw = $stmt->fetchAll();
         $arr = [];
-        foreach($raw as $r) {
+        foreach ($raw as $r) {
             array_push($arr, $r[0]);
         }
         return $arr;

@@ -17,7 +17,7 @@
                 $mainData = $form->getMainData();
                 $specialData = $form->getSpecialData();
                 $curType = $form->getCurType();
-                $product = new Product();
+                // $product = new Product();
                 if ($result) {
                     print_r($mainData);
                     print_r($specialData);

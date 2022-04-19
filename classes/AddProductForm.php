@@ -34,12 +34,9 @@ class AddProductForm
                 $mainElementsE[$i] = $this::ERR_MSG_FIELD_REQ;
                 $result = False;
             } else {
-                $product = new Product();
                 $preData = $this->preCleanData($_POST[$this::MAIN_ELEMENTS_NAME[$i]]);
-                $func = '$product->'.$this::MAIN_ELEMENTS_CHECK_FUNC[$i];
-                print_r($func);
-                $res = $func();
-                echo $res;
+                $func = 'Product::'.$this::MAIN_ELEMENTS_CHECK_FUNC[$i];
+                $res = $func($preData);
                 if ($res) {
                     $mainData[$i] = $preData;
                 } else {
@@ -65,8 +62,10 @@ class AddProductForm
                 $specialE[$i] = $this::ERR_MSG_FIELD_REQ;
                 $result = False;
             } else {
-                $preData = $this->preCleanData($_POST[$this::MAIN_ELEMENTS_NAME[$i]]);
-                if ($this::SPECIAL_CHECK_FUNC()) {
+                $preData = $this->preCleanData($_POST[$currentTypePropsNames[$i]]);
+                $func = 'Product::'.$this::SPECIAL_CHECK_FUNC;
+                $res = $func($preData);
+                if ($res) {
                     $specialData[$i] = $preData;
                 } else {
                     $specialData[$i] = '';
@@ -124,7 +123,7 @@ class AddProductForm
                 '<input type="'.$this::MAIN_ELEMENTS_TYPE[$i].'" 
                 name="'.$this::MAIN_ELEMENTS_NAME[$i].'" 
                 id="'.$this::MAIN_ELEMENTS_ID[$i].
-                ' value='.$mainElementsT[$i].'"><span> * </span><span class="ErrMsg">'.
+                '" value="'.$mainElementsT[$i].'"><span> * </span><span class="ErrMsg">'.
                 $mainElementsE[$i].'</span></div>';
         }
 
@@ -164,7 +163,9 @@ class AddProductForm
             $allBlockDesc,
             $currentTypeProps,
             $currentTypePropsIds,
-            $currentTypePropsNames
+            $currentTypePropsNames,
+            $specialT,
+            $specialE
         );
         echo '</div>';
 
@@ -194,7 +195,9 @@ class AddProductForm
         $allBlockDesc,
         $currentTypeProps,
         $currentTypePropsIds,
-        $currentTypePropsNames
+        $currentTypePropsNames,
+        $specialT,
+        $specialE
         )
     {
         // Prepare the dynamic <div> contents for changeType()
@@ -205,7 +208,9 @@ class AddProductForm
                 $currentTypePropsNames[$i].'" class="Lab">'.
                 $currentTypeProps[$i].
                 '</label><input type="number" name="'.$currentTypePropsNames[$i].
-                '"id="'.$currentTypePropsIds[$i].'"><span> * </span></div>';
+                '"id="'.$currentTypePropsIds[$i].'" value="'.
+                $specialT[$i].'"><span> * </span><span class="ErrMsg">'.
+                $specialE[$i].'</div>';
         }
         $divCont .= '</div>';
 

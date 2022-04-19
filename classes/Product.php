@@ -1,12 +1,13 @@
 <?php
 
-abstract class Product
+class Product
 {
     protected $sku;
     protected $name;
     protected $price;
     protected $typeId;
     protected $special;
+    protected $specialsNames;
 
     
     /**
@@ -181,13 +182,52 @@ abstract class Product
         }
     }
 
-    /**
-     * Get the value of special - to be implemented in the child classes
-     */
-    abstract public function getSpecial();
 
     /**
-     * Set the value of special - to be implemented in the child classes
+     * Get the value of special
      */
-    abstract public function setSpecial($special): self;
+    public function getSpecial()
+    {
+        return $this->special;
+    }
+
+
+    /**
+     * Set the value of special
+     */
+    public function setSpecial($special): self
+    {
+        $result = true;
+        foreach ($special as $spec) {
+            if (!$this->checkSpecial($spec)) {
+                $result = false;
+            }
+        }
+        if ($result) {
+            $this->special = $spec;
+            return $this;
+        } else {
+            throw new Exception("One or more of the special parameters is invalid!");
+        }
+    }
+
+    /**
+     * Get the value of specialsNames
+     */
+    public function getSpecialsNames()
+    {
+        return $this->specialsNames;
+    }
+
+    /**
+     * Set the value of specialsNames
+     */
+    public function setSpecialsNames(): self
+    {
+        $db = new Database();
+        $specialsNames = $db->getCurrentTypeProps($this->typeId);
+        $this->specialsNames = $specialsNames;
+
+        return $this;
+    }
 }

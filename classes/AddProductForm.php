@@ -9,9 +9,11 @@ class AddProductForm
     private const MAIN_ELEMENTS_LABEL = array("SKU: ", "Name: ", "Price ($): ");
     private const MAIN_ELEMENTS_ID = array("sku", "name", "price");
     private const MAIN_ELEMENTS_CHECK_FUNC = array("checkSku", "checkName", "checkPrice");
+    private const MAIN_ELEMENTS_SET_FUNC = array("setSku", "setName", "setPrice");
     private const TYPE_SWITCHER_ID = "productType";
     private const TYPE_SWITCHER_NAME = "productType";
     private const SPECIAL_CHECK_FUNC = "checkSpecial";
+    private const SPECIAL_SET_FUNC = "setSpecial";
     private const ACTION = "index.php";
     private const ERR_MSG_FIELD_REQ = "Please, submit required data";
     private const ERR_MSG_INVALID_VAL = "Please, provide the data of indicated type";
@@ -81,6 +83,22 @@ class AddProductForm
         $this->setMainElementsE($mainElementsE);
         $this->setSpecialE($specialE);
         $this->setCurType($curType);
+
+        // If result is ok then instantiate a new product and save it to the DB
+        if ($result) {
+            $product = new Product();
+            // Initialaze with main data
+            for ($i=0; $i<count($mainData); $i++) {
+                $func = '$product->'.$this::MAIN_ELEMENTS_SET_FUNC[$i];
+                $func($mainData[$i]);
+            }
+            // Initialaze with the special data
+            $func = '$product->'.$this::SPECIAL_SET_FUNC;
+            $func($specialData);
+
+            // Save the initialized product to DB
+           $product->addProductToDb();
+        }
 
         // Return
         return $result;

@@ -28,25 +28,4 @@ class Book extends product
             throw new Exception("Book weight should be positive!");
         }
     }
-
-    /**
-     * Get the value of special
-     */
-    public function getSpecial()
-    {
-        return $this->special;
-    }
-
-    /**
-     * Set the value of special
-     */
-    public function setSpecial($special): self
-    {
-        if ($this->checkSpecial($special)) {
-            $this->special = $special;
-            return $this;
-        } else {
-            throw new Exception("Invalid specials!");
-        }
-    }
 }

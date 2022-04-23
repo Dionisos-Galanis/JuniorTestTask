@@ -1,7 +1,7 @@
 <?php
 
-require_once "../classes/Database.php";
-require_once "../classes/AddProductForm.php";
+require_once "/app/classes/Database.php";
+require_once "/app/classes/AddProductForm.php";
 
 // Get the product type from the request
 $curType = $_REQUEST["curType"];

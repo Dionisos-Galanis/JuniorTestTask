@@ -10,7 +10,7 @@ class Database extends PDO
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
         parent::__construct(
-            "mysql:host=127.0.0.1;dbname=jttproducts",
+            "mysql:dbname=jttproducts;host=mysql",
             'wduser',
             'wdaccess'
         );

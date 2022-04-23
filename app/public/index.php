@@ -8,6 +8,7 @@
         ?>
     </head>
     <body>
-       <a href="<?php echo ManageUrls::constructUrl("add-product"); ?>">To add-product>
+       <a href="<?php echo ManageUrls::constructUrl("add-product");?>">To add-product></a>
     </body>
 </html>
+

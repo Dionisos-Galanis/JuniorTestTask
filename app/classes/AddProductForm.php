@@ -226,9 +226,15 @@ class AddProductForm
                 $currentTypePropsNames[$i].'" class="Lab">'.
                 $currentTypeProps[$i].
                 '</label><input type="number" name="'.$currentTypePropsNames[$i].
-                '"id="'.$currentTypePropsIds[$i].'" value="'.
-                $specialT[$i].'"><span> * </span><span class="ErrMsg">'.
-                $specialE[$i].'</div>';
+                '"id="'.$currentTypePropsIds[$i].'" value="';
+                if (!empty( $specialT)) {
+                    $divCont .= $specialT[$i];
+                }
+                $divCont .= '"><span> * </span><span class="ErrMsg">';
+                if (!empty($specialE)) {
+                    $divCont .= $specialE[$i];
+                }
+                $divCont .= '</div>';
         }
         $divCont .= '</div>';
 

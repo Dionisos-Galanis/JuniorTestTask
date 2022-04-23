@@ -9,7 +9,7 @@
         ?>
     </head>
     <body>
-        <h2>Add a new product</h2>
+       <h2>Add a new product</h2>
         <?php
             $form = new AddProductForm();
             if ($_SERVER["REQUEST_METHOD"] == "POST") {

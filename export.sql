@@ -49,11 +49,15 @@ CREATE TABLE IF NOT EXISTS `products` (
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`id_product_type`) REFERENCES `product_types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table jttproducts.products: ~2 rows (approximately)
+-- Dumping data for table jttproducts.products: ~3 rows (approximately)
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` (`sku`, `name`, `price`, `id_product_type`) VALUES
-	('b76498', 'My 1st Book', 8.99, 1),
-	('d967', 'My 1st DVD', 1.56, 2);
+	('B7652', 'My 1st Book', 17.00, 1),
+	('D8523875', 'My 1st Disk', 6.34, 2),
+	('F82354', 'Chair', 30.00, 3),
+	('F823542', 'Chair 2', 30.00, 3),
+	('F9486300', 'Big Table', 86.00, 3),
+	('F948638', 'Table', 64.99, 3);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 
 -- Dumping structure for table jttproducts.product_types
@@ -101,17 +105,29 @@ CREATE TABLE IF NOT EXISTS `property_values` (
   `id_product_type` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_sku` (`product_sku`,`property_id`),
-  KEY `product_sku_2` (`product_sku`,`id_product_type`),
-  KEY `property_id` (`property_id`,`id_product_type`),
-  CONSTRAINT `property_values_ibfk_1` FOREIGN KEY (`product_sku`, `id_product_type`) REFERENCES `products` (`sku`, `id_product_type`),
-  CONSTRAINT `property_values_ibfk_2` FOREIGN KEY (`property_id`, `id_product_type`) REFERENCES `junction_ptype_propname` (`id_property_name`, `id_product_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+  KEY `property_values_ibfk_1` (`product_sku`,`id_product_type`),
+  KEY `property_values_ibfk_2` (`property_id`,`id_product_type`),
+  CONSTRAINT `property_values_ibfk_1` FOREIGN KEY (`product_sku`, `id_product_type`) REFERENCES `products` (`sku`, `id_product_type`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `property_values_ibfk_2` FOREIGN KEY (`property_id`, `id_product_type`) REFERENCES `junction_ptype_propname` (`id_property_name`, `id_product_type`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table jttproducts.property_values: ~2 rows (approximately)
+-- Dumping data for table jttproducts.property_values: ~5 rows (approximately)
 /*!40000 ALTER TABLE `property_values` DISABLE KEYS */;
 INSERT INTO `property_values` (`id`, `product_sku`, `property_id`, `property_value`, `id_product_type`) VALUES
-	(1, 'b76498', 2, 1.76, 1),
-	(2, 'd967', 1, 45653.00, 2);
+	(6, 'B7652', 2, 1.56, 1),
+	(22, 'D8523875', 1, 2658.00, 2),
+	(23, 'F82354', 3, 50.00, 3),
+	(24, 'F82354', 4, 30.00, 3),
+	(25, 'F82354', 5, 30.00, 3),
+	(26, 'F823542', 3, 50.00, 3),
+	(27, 'F823542', 4, 35.00, 3),
+	(28, 'F823542', 5, 35.00, 3),
+	(29, 'F948638', 3, 70.00, 3),
+	(30, 'F948638', 4, 60.00, 3),
+	(31, 'F948638', 5, 120.00, 3),
+	(32, 'F9486300', 3, 70.00, 3),
+	(33, 'F9486300', 4, 80.00, 3),
+	(34, 'F9486300', 5, 150.00, 3);
 /*!40000 ALTER TABLE `property_values` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

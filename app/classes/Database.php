@@ -20,6 +20,75 @@ class Database extends PDO
     }
 
 
+    /**
+     * Removes product with the given SKU from the DB
+     */
+    public function deleteProduct($sku)
+    {
+        $stmt = $this->prepare("DELETE FROM products WHERE sku = :sku");
+        $stmt->execute(['sku' => $sku]);
+    }
+
+
+    /**
+     * Returns an instance of Prduct initialized with data from DB according to the given SKU. Returns Null if not found.
+     */
+    public function getProductFromDb($sku)
+    {
+        // First check that the product is present in DB
+        if (!$this->isSkuInDb($sku)) {
+            return Null;
+        }
+
+        // Get an instance of Product
+        $product = new Product();
+
+        // SKU is present, so lets extract the product. First, the main params:
+        $stmt = $this->prepare("SELECT name, price, id_product_type
+            FROM products
+            WHERE sku = :sku");
+        $stmt->execute(['sku' => $sku]);
+        $mainParams = $stmt->fetchAll();
+
+        $product->setSku($sku);
+        $product->setName($mainParams[0][0]);
+        $product->setPrice($mainParams[0][1]);
+        $product->setTypeId($mainParams[0][2]);
+
+        // Now the special params
+        $stmt = $this->prepare("SELECT property_value
+            FROM property_values
+            WHERE product_sku = :sku");
+        $stmt->execute(['sku' => $sku]);
+        $specParams = $stmt->fetchAll();
+        $specArr = [];
+        foreach ($specParams as $spec) {
+            array_push($specArr, $spec[0]);
+        }
+        $product->setSpecial($specArr);
+        $product->setSpecialsNames();
+
+        return $product;
+    }
+
+
+    /**
+     * Checks if a product with the given SKU is in DB
+     */
+    public function isSkuInDb($sku)
+    {
+        $skuArr = $this->getAllSku();
+        if (in_array(strtoupper($sku), $skuArr)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * Gets an array of all stored SKUs
+     */
     public function getAllSku()
     {
         $stmt = $this->prepare("SELECT sku FROM products");
@@ -34,6 +103,9 @@ class Database extends PDO
     }
 
 
+    /**
+     * Gets all available product Type IDs
+     */
     public function getAllProductTypeIds()
     {
         $stmt = $this->prepare("SELECT id FROM product_types");
@@ -48,8 +120,17 @@ class Database extends PDO
     }
 
 
+    /**
+     * Saves a new product to DB
+     */
     public function saveNewProduct(Product $product)
     {
+        // We need to check that new SKU should not alredy be in DB
+        if ($this->isSkuInDb($product->getSku())) {
+            throw new Exception("SKU is to be unique!");
+            die;
+        };
+
         // Insert new product with base params
         $stmt = $this->prepare("INSERT INTO products (sku, name, price, id_product_type)
             VALUES (:sku, :name, :price, :id_product_type)");
@@ -61,10 +142,7 @@ class Database extends PDO
         ]);
 
         // Get the special params list for this product
-        $stmt = $this->prepare("SELECT id_property_name FROM junction_ptype_propname
-            WHERE id_product_type = :id_product_type");
-        $stmt->execute(['id_product_type' => $product->getTypeId()]);
-        $id_prop_names = $stmt->fetchAll();
+        $id_prop_names = $this->getIdPropNames($product->getTypeId());
         
         // Insert specials
         $k = 0;
@@ -85,7 +163,19 @@ class Database extends PDO
 
 
     /**
-     * Gets all names of the product types from the database
+     * Gets IDs of properties foe a given product type ID
+     */
+    public function getIdPropNames($typeId)
+    {
+        $stmt = $this->prepare("SELECT id_property_name FROM junction_ptype_propname
+            WHERE id_product_type = :id_product_type");
+        $stmt->execute(['id_product_type' => $typeId]);
+        return $stmt->fetchAll();
+    }
+
+
+    /**
+     * Gets all names of the product types names from the database
      */
     public function getAllProductTypes()
     {

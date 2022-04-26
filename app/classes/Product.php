@@ -9,7 +9,49 @@ class Product
     protected $special;
     protected $specialsNames;
 
-    
+
+    /**
+     * Echoes a <div> with a single product data - for index page
+     */
+    public function echoProduct()
+    {
+        // Check if all properties are set
+        if (
+            $this->sku == null
+            || $this->name == null
+            || $this->price == null
+            || $this->typeId == null
+            || $this->special == null
+            || $this->specialsNames == null
+        ) {
+            throw new Exception("All product properties have to be set!");
+        }
+
+        // Opening tag
+        echo '<div class="productDiv">';
+
+        // Delete checkbox
+        echo '<input type="checkbox" class="delete-checkbox" name="'.$this->sku.'" value="'.$this->sku.'">';
+
+        // Main params
+        echo '<div class="mainParams">'.
+            '<p class="par">'.$this->sku.'</p>'.
+            '<p class="par">'.$this->name.'</p>'.
+            '<p class="par">$'.$this->price.'</p>'.
+            '</div>';
+
+        // Specials
+        echo '<div class="specialParams">';
+        for ($i=0; $i<count($this->special); $i++) {
+            echo '<p class="par">'.$this->specialsNames[$i].$this->special[$i].'</p>';
+        }
+        echo '</div>';
+
+        // Closing tag
+        echo '</div>';
+    }
+
+
     /**
      * Try to add object data to the DB
      */
@@ -36,14 +78,7 @@ class Product
      */
     public static function checkSku($sku): bool
     {
-        // Get all existing SKUs
-        $db = new Database();
-        $skuArr = $db->getAllSku();
-        if (in_array($sku, $skuArr)) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     /**
@@ -111,7 +146,7 @@ class Product
     public function setSku($sku): self
     {
         if ($this->checkSku($sku)) {
-            $this->sku = $sku;
+            $this->sku = strtoupper($sku);
             return $this;
         } else {
             throw new Exception("SKU should be unique!");

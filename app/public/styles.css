@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    background-color: black;
+    color: burlywood;
   }
   
 /* For mobile phones: */
@@ -70,4 +72,27 @@ body {
 
 .ErrMsg {
   color: red;
+}
+
+.productDiv {
+  border-style: dotted;
+  float: left;
+  padding: 15px;
+  margin: 10px;
+  height: 270px;
+  width: 200px;
+}
+
+.par {
+  text-align: center;
+}
+
+#add, #massdel {
+  margin-top: 10px;
+  margin-left: 50px;
+  float: left;
+}
+
+#allProducts {
+  padding-top: 40px;
 }

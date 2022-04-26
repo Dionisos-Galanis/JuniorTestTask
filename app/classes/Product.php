@@ -204,7 +204,7 @@ class Product
             }
         }
         if ($result) {
-            $this->special = $spec;
+            $this->special = $special;
             return $this;
         } else {
             throw new Exception("One or more of the special parameters is invalid!");

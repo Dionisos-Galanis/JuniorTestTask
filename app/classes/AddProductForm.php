@@ -10,6 +10,8 @@ class AddProductForm
     private const MAIN_ELEMENTS_ID = array("sku", "name", "price");
     private const MAIN_ELEMENTS_CHECK_FUNC = array("checkSku", "checkName", "checkPrice");
     private const MAIN_ELEMENTS_SET_FUNC = array("setSku", "setName", "setPrice");
+    private const PRODUCT_TYPE_CHECK_FUNC = "checkTypeId";
+    private const PRODUCT_TYPE_SET_FUNC = "setTypeId";
     private const TYPE_SWITCHER_ID = "productType";
     private const TYPE_SWITCHER_NAME = "productType";
     private const SPECIAL_CHECK_FUNC = "checkSpecial";
@@ -34,6 +36,7 @@ class AddProductForm
         for ($i=0; $i < count($this::MAIN_ELEMENTS_NAME); $i++) {
             if (empty($_POST[$this::MAIN_ELEMENTS_NAME[$i]])) {
                 $mainElementsE[$i] = $this::ERR_MSG_FIELD_REQ;
+                $mainData[$i] = '';
                 $result = False;
             } else {
                 $preData = $this->preCleanData($_POST[$this::MAIN_ELEMENTS_NAME[$i]]);
@@ -41,6 +44,7 @@ class AddProductForm
                 $res = $func($preData);
                 if ($res) {
                     $mainData[$i] = $preData;
+                    $mainElementsE[$i] = '';
                 } else {
                     $mainData[$i] = '';
                     $mainElementsE[$i] = $this::ERR_MSG_INVALID_VAL;
@@ -53,6 +57,11 @@ class AddProductForm
 
         // Get product type
         $curType = $_POST[$this::TYPE_SWITCHER_NAME];
+        // Check product type
+        $func = 'Product::'.$this::PRODUCT_TYPE_CHECK_FUNC;
+        if (!$func($curType)) {
+            $result = False;
+        }
 
         // Get list of the special parameters from DB
         $db = new Database();
@@ -62,6 +71,7 @@ class AddProductForm
         for ($i=0; $i < count($currentTypePropsNames); $i++) {
             if (empty($_POST[$currentTypePropsNames[$i]])) {
                 $specialE[$i] = $this::ERR_MSG_FIELD_REQ;
+                $specialData[$i] = '';
                 $result = False;
             } else {
                 $preData = $this->preCleanData($_POST[$currentTypePropsNames[$i]]);
@@ -69,6 +79,7 @@ class AddProductForm
                 $res = $func($preData);
                 if ($res) {
                     $specialData[$i] = $preData;
+                    $specialE[$i] = '';
                 } else {
                     $specialData[$i] = '';
                     $specialE[$i] = $this::ERR_MSG_INVALID_VAL;
@@ -89,12 +100,15 @@ class AddProductForm
             $product = new Product();
             // Initialaze with main data
             for ($i=0; $i<count($mainData); $i++) {
-                $func = '$product->'.$this::MAIN_ELEMENTS_SET_FUNC[$i];
-                $func($mainData[$i]);
+                $func = $this::MAIN_ELEMENTS_SET_FUNC[$i];
+                $product->$func($mainData[$i]);
             }
+            // Initialaze with the typeId
+            $func = $this::PRODUCT_TYPE_SET_FUNC;
+            $product->$func($curType);
             // Initialaze with the special data
-            $func = '$product->'.$this::SPECIAL_SET_FUNC;
-            $func($specialData);
+            $func = $this::SPECIAL_SET_FUNC;
+            $product->$func($specialData);
 
             // Save the initialized product to DB
            $product->addProductToDb();
@@ -138,8 +152,11 @@ class AddProductForm
             echo '<div class="InputContainer"><label for="'.
                 $this::MAIN_ELEMENTS_NAME[$i].'" class="Lab">'.
                 $this::MAIN_ELEMENTS_LABEL[$i].'</label>'.
-                '<input type="'.$this::MAIN_ELEMENTS_TYPE[$i].'" 
-                name="'.$this::MAIN_ELEMENTS_NAME[$i].'" 
+                '<input type="'.$this::MAIN_ELEMENTS_TYPE[$i].'" ';
+            if ($this::MAIN_ELEMENTS_TYPE[$i] == 'number') {
+                echo 'step="0.01" ';
+            }
+            echo 'name="'.$this::MAIN_ELEMENTS_NAME[$i].'" 
                 id="'.$this::MAIN_ELEMENTS_ID[$i].
                 '" value="'.$mainElementsT[$i].'"><span> * </span><span class="ErrMsg">'.
                 $mainElementsE[$i].'</span></div>';
@@ -225,7 +242,7 @@ class AddProductForm
             $divCont .= '<div class="InputContainer"><label for="'.
                 $currentTypePropsNames[$i].'" class="Lab">'.
                 $currentTypeProps[$i].
-                '</label><input type="number" name="'.$currentTypePropsNames[$i].
+                '</label><input type="number" step="0.01" name="'.$currentTypePropsNames[$i].
                 '"id="'.$currentTypePropsIds[$i].'" value="';
                 if (!empty( $specialT)) {
                     $divCont .= $specialT[$i];

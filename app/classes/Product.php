@@ -1,12 +1,13 @@
 <?php
 
-abstract class Product
+class Product
 {
     protected $sku;
     protected $name;
     protected $price;
     protected $typeId;
     protected $special;
+    protected $specialsNames;
 
     
     /**
@@ -33,7 +34,7 @@ abstract class Product
     /**
      * Validate sku
      */
-    public function checkSku($sku): bool
+    public static function checkSku($sku): bool
     {
         // Get all existing SKUs
         $db = new Database();
@@ -48,15 +49,15 @@ abstract class Product
     /**
      * Validate Name
      */
-    public function checkName($name): bool
+    public static function checkName($name): bool
     {
         return true;
     }
 
     /**
-     * Validate sku
+     * Validate Price
      */
-    public function checkPrice($price): bool
+    public static function checkPrice($price): bool
     {
         if ($price < 0) {
             return false;
@@ -66,9 +67,9 @@ abstract class Product
     }
 
     /**
-     * Validate sku
+     * Validate the product type ID
      */
-    public function checkTypeId($typeId): bool
+    public static function checkTypeId($typeId): bool
     {
         // Get all valid product type IDs
         $db = new Database();
@@ -81,18 +82,18 @@ abstract class Product
     }
 
     /**
-     * Validate sku
+     * Validate special (product specific) parameters
      */
-    public function checkSpecial($special): bool
+    public static function checkSpecial($special): bool
     {
-        foreach ($special as $s) {
-            if (is_numeric($s)) {
-                if ($s <= 0) {
-                    return false;
-                } 
-            } else {
+        if (is_numeric($special)) {
+            if ($special <= 0) {
                 return false;
+            } else {
+                return true;
             }
+        } else {
+            return false;
         }
     }
 
@@ -181,13 +182,52 @@ abstract class Product
         }
     }
 
-    /**
-     * Get the value of special - to be implemented in the child classes
-     */
-    abstract public function getSpecial();
 
     /**
-     * Set the value of special - to be implemented in the child classes
+     * Get the value of special
      */
-    abstract public function setSpecial($special): self;
+    public function getSpecial()
+    {
+        return $this->special;
+    }
+
+
+    /**
+     * Set the value of special
+     */
+    public function setSpecial($special): self
+    {
+        $result = true;
+        foreach ($special as $spec) {
+            if (!$this->checkSpecial($spec)) {
+                $result = false;
+            }
+        }
+        if ($result) {
+            $this->special = $special;
+            return $this;
+        } else {
+            throw new Exception("One or more of the special parameters is invalid!");
+        }
+    }
+
+    /**
+     * Get the value of specialsNames
+     */
+    public function getSpecialsNames()
+    {
+        return $this->specialsNames;
+    }
+
+    /**
+     * Set the value of specialsNames
+     */
+    public function setSpecialsNames(): self
+    {
+        $db = new Database();
+        $specialsNames = $db->getCurrentTypeProps($this->typeId);
+        $this->specialsNames = $specialsNames;
+
+        return $this;
+    }
 }

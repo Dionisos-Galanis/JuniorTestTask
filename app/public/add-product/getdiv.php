@@ -1,7 +1,7 @@
 <?php
 
-require_once "../classes/Database.php";
-require_once "../classes/AddProductForm.php";
+require_once "/app/classes/Database.php";
+require_once "/app/classes/AddProductForm.php";
 
 // Get the product type from the request
 $curType = $_REQUEST["curType"];
@@ -15,6 +15,7 @@ $allBlockDesc = $db->getAllBlockDesc();
 $currentTypeProps = $db->getCurrentTypeProps($curType);
 $currentTypePropsIds = $db->getCurrentTypePropsIds($curType);
 $currentTypePropsNames = $db->getCurrentTypePropsNames($curType);
+$specialT = $specialE = '';
 
 // Put new dynamic div
 $f = new AddProductForm();
@@ -24,5 +25,7 @@ $f->putDynDiv(
     $allBlockDesc,
     $currentTypeProps,
     $currentTypePropsIds,
-    $currentTypePropsNames
+    $currentTypePropsNames,
+    $specialT,
+    $specialE
 );

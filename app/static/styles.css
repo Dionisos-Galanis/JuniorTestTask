@@ -67,3 +67,7 @@ body {
   margin-right: 50px;
   float: left;
 }
+
+.ErrMsg {
+  color: red;
+}

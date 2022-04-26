@@ -10,7 +10,7 @@ class Database extends PDO
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
         parent::__construct(
-            "mysql:host=127.0.0.1;dbname=jttproducts",
+            "mysql:dbname=jttproducts;host=mysql",
             'wduser',
             'wdaccess'
         );
@@ -71,12 +71,13 @@ class Database extends PDO
         $special = $product->getSpecial();
         foreach($id_prop_names as $id_p_n) {
             $stmt = $this->prepare("INSERT INTO property_values
-                (product_sku, property_id, property_value)
-                VALUES (:sku, :id_p_n, :val)");
+                (product_sku, property_id, property_value, id_product_type)
+                VALUES (:sku, :id_p_n, :val, :ptype)");
             $stmt->execute([
                 'sku' => $product->getSku(),
                 'id_p_n' => $id_p_n[0],
-                'val' => $special[$k][0]
+                'val' => $special[$k],
+                'ptype' => $product->getTypeId()
             ]);
             $k++;
         }

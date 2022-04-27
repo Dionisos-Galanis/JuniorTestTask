@@ -74,11 +74,32 @@ class Product
 
 
     /**
-     * Validate sku
+     * Validate sku at input
      */
     public static function checkSku($sku): bool
     {
-        return true;
+        if (strlen($sku) < 30) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Validate sku at save
+     */
+    public static function checkSkuSave($sku): bool
+    {
+        if (strlen($sku) < 30) {
+            $db = new Database();
+            if (!$db->isSkuInDb($sku)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -86,7 +107,11 @@ class Product
      */
     public static function checkName($name): bool
     {
-        return true;
+        if (strlen($name) < 30) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -94,7 +119,7 @@ class Product
      */
     public static function checkPrice($price): bool
     {
-        if ($price < 0) {
+        if ($price <= 0 || $price > 1e7) {
             return false;
         } else {
             return true;
@@ -122,7 +147,7 @@ class Product
     public static function checkSpecial($special): bool
     {
         if (is_numeric($special)) {
-            if ($special <= 0) {
+            if ($special <= 0 || $special > 1e7) {
                 return false;
             } else {
                 return true;
@@ -149,7 +174,7 @@ class Product
             $this->sku = strtoupper($sku);
             return $this;
         } else {
-            throw new Exception("SKU should be unique!");
+            throw new Exception("SKU should be unique and no longer than 29 symbols!");
         }
         
     }
@@ -192,7 +217,7 @@ class Product
             $this->price = $price;
             return $this;
         } else {
-            throw new Exception("Price can't be negative!");
+            throw new Exception("Price can't be negative or exceed 1e6!");
         }
     }
 

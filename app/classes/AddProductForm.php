@@ -8,7 +8,7 @@ class AddProductForm
     private const MAIN_ELEMENTS_NAME = array("sku", "name", "price");
     private const MAIN_ELEMENTS_LABEL = array("SKU: ", "Name: ", "Price ($): ");
     private const MAIN_ELEMENTS_ID = array("sku", "name", "price");
-    private const MAIN_ELEMENTS_CHECK_FUNC = array("checkSku", "checkName", "checkPrice");
+    private const MAIN_ELEMENTS_CHECK_FUNC = array("checkSkuSave", "checkName", "checkPrice");
     private const MAIN_ELEMENTS_SET_FUNC = array("setSku", "setName", "setPrice");
     private const PRODUCT_TYPE_CHECK_FUNC = "checkTypeId";
     private const PRODUCT_TYPE_SET_FUNC = "setTypeId";
